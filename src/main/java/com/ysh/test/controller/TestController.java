@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -15,15 +16,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ysh.test.HomeController;
 import com.ysh.test.dao.UserDao;
 import com.ysh.test.entity.User;
+import com.ysh.test.repository.TestRepository;
+import com.ysh.test.service.TestService;
 
 @Controller
 public class TestController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	@RequestMapping(value = "/InsertUser", method = RequestMethod.GET)
+	private TestService testService;
+	
+	@Autowired
+	public TestController(TestService testService) {
+		this.testService = testService;
+	}
+
+	
+	//Entity Manager 방식의 JPA
+	@RequestMapping(value = "/InsertUser1", method = RequestMethod.GET)
 	@ResponseBody
-	public String home(Locale locale, Model model) {
+	public String InsertUser1(Locale locale, Model model) {
 		  //ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("root-context.xml");
 		  ApplicationContext ctx = new FileSystemXmlApplicationContext("C:\\springFramework_sts3\\workspace\\spring_jpa_test\\src\\main\\webapp\\WEB-INF\\spring\\root-context.xml");
 
@@ -38,6 +50,15 @@ public class TestController {
 	        //ctx.close();
 		
 		return "/InsertUser";
+	}
+	
+	
+	//Jpa Repository방식의 JPA
+	@RequestMapping(value = "/InsertUser2", method = RequestMethod.GET)
+	@ResponseBody
+	public String InsertUser2() {
+		testService.registerUser("testName1", "testEmail1");
+		return "/InsertUser2";
 	}
 	
 }

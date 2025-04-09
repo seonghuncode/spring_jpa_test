@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- 비즈니스 로직(서비스,DAO,데이터베이스 설정) -->
@@ -17,13 +20,15 @@
 		base-package="com.ysh.test" />
 
 	<!-- 2. DataSource 설정 -->
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"
 			value="com.mysql.cj.jdbc.Driver"></property>
 		<!-- 실제 등록한 MySQL Schema 및 사용자 계정 정보를 작성한다. <property name="url" value="jdbc:mysql://ip:port/schema?useSSL=false&amp;serverTimezone=UTC"> 
 			<property name="username" value="test"></property> <property name="password" 
 			value="test"></property> -->
-		<property name="url" value="jdbc:mysql://127.0.0.1:3306/springTestDB?useSSL=false&amp;serverTimezone=UTC">
+		<property name="url"
+			value="jdbc:mysql://127.0.0.1:3306/springTestDB?useSSL=false&amp;serverTimezone=UTC">
 		</property>
 		<property name="username" value="ysh"></property>
 		<property name="password" value="ysh123"></property>
@@ -55,5 +60,11 @@
 	<!-- 5. 트랜잭션 어노테이션 활성화 -->
 	<tx:annotation-driven
 		transaction-manager="transactionManager" />
+
+	<!-- Spring Data JPA 활성화 -->
+	<jpa:repositories
+		base-package="com.ysh.test.repository"
+		entity-manager-factory-ref="entityManagerFactory"
+		transaction-manager-ref="transactionManager" />
 
 </beans>
